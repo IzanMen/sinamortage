@@ -1,0 +1,198 @@
+---
+import "@fontsource/dm-sans/latin-400.css";
+import "@fontsource/dm-sans/latin-500.css";
+import "@fontsource/dm-sans/latin-600.css";
+import "@fontsource/instrument-serif/latin-400.css";
+import "@fontsource/instrument-serif/latin-400-italic.css";
+import "../styles/site.css";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import Brand from "../components/Brand.astro";
+import Project from "../components/Project.astro";
+import { profiles, solutions, steps, approvedTransactions } from "../data/site";
+---
+
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sina Mortgage | Commercial Real Estate Financing</title>
+    <meta
+      name="description"
+      content="Explore commercial real estate financing with Sina Mortgage in Naples, Florida. Prepare a project review for your acquisition, renovation, or refinance."
+    />
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="icon" href="/favicon.png" />
+  </head>
+  <body>
+    <a class="skip" href="#main">
+      Skip to content
+    </a>
+    <Header />
+    <main id="main">
+      <Hero />
+      <section class="wrap section audience" id="clients">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">
+              <span></span> Who we serve
+            </p>
+            <h2>Built around your role.</h2>
+          </div>
+          <p>
+            Different perspectives. Different capital needs. <br />
+            Find the starting point for your project.
+          </p>
+        </div>
+        <div class="cards">
+          {profiles.map((p, i) => (
+            <a class="profile" href="#project" data-role={p.role}>
+              <div class="card-img">
+                <img
+                  src={"/images/" + p.image + ".webp"}
+                  alt=""
+                  loading="lazy"
+                />
+                <span class="tag">
+                  0{i + 1} / {["INVEST", "BUILD", "DEVELOP"][i]}
+                </span>
+              </div>
+              <div class="card-copy">
+                <h3>{p.title}</h3>
+                <p>{p.text}</p>
+                <span class="card-link">
+                  Discuss your project <b aria-hidden="true">↗</b>
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+      <section class="soft" id="solutions">
+        <div class="wrap section split">
+          <div>
+            <p class="eyebrow">
+              <span></span> Capital solutions
+            </p>
+            <h2>
+              Financing for the
+              <br />
+              <em>next move.</em>
+            </h2>
+            <p class="measure">
+              Start with what the asset needs to do next. Explore financing by
+              investment objective.
+            </p>
+          </div>
+          <div class="accordions">
+            {solutions.map(([title, desc], i) => (
+              <details open={i === 0}>
+                <summary>
+                  <small>0{i + 1}</small>
+                  {title}
+                  <b aria-hidden="true"></b>
+                </summary>
+                <p>{desc}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+      <section id="process" class="dark">
+        <div class="wrap section split">
+          <div>
+            <p class="eyebrow">
+              <span></span> Our process
+            </p>
+            <h2>
+              From first review
+              <br />
+              to closing.
+            </h2>
+          </div>
+          <ol class="steps">
+            {steps.map(([title, desc], i) => (
+              <li>
+                <small>0{i + 1}</small>
+                <div>
+                  <h3>{title}</h3>
+                  <p>{desc}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+      {approvedTransactions.length > 0 && (
+        <section class="section wrap">
+          <h2>Representative transactions</h2>
+          {approvedTransactions.map((t) => (
+            <article>
+              <h3>{t.title}</h3>
+              <p>{t.description}</p>
+            </article>
+          ))}
+        </section>
+      )}
+      <section id="about" class="wrap section split">
+        <div>
+          <p class="eyebrow">
+            <span></span> About Sina Mortgage
+          </p>
+          <h2>A direct conversation.</h2>
+        </div>
+        <div>
+          <h3>Dennis Gamez</h3>
+          <p class="role">Sr. Mortgage Loan Officer · NMLS #1244555</p>
+          <p>
+            Based in Naples, Florida, Dennis manages Sina Mortgage, powered by
+            Valley Lending LLC. Speak with Dennis about the property, your plans
+            for it, and the financing questions you need to resolve.
+          </p>
+          <a class="textlink" href="tel:+12394657351">
+            (239) 465-7351 ↗
+          </a>
+        </div>
+      </section>
+      <Project />
+    </main>
+    <footer>
+      <div class="wrap">
+        <div class="footer-top">
+          <Brand />
+          <span>Equal Housing Opportunity</span>
+        </div>
+        <div class="footer-grid">
+          <div>
+            DBA Sina Mortgage is managed by Dennis Gamez NMLS 1244555
+            <br />
+            13372 Covenant Road, Naples, Florida 34114
+          </div>
+          <div>
+            Powered by Valley Lending LLC NMLS 2636235
+            <br />
+            24110 Meadowbrook Road Suite 113, Novi, Michigan 48375
+          </div>
+        </div>
+        <p>
+          Disclaimer: Sina Mortgage is a marketing mortgage company powered by
+          Valley Lending LLC (NMLS #2636235) and managed by Dennis Gamez (NMLS
+          #1244555). Equal Housing Opportunity. All loans subject to credit
+          approval and program guidelines.
+        </p>
+        <div class="legal">
+          <span>© 2026 Sina Mortgage. All rights reserved.</span>
+          <a href="https://www.nmlsconsumeraccess.org/">NMLS Consumer Access</a>
+          <a href="https://sinamortgage.com/privacy-policy">Privacy Policy</a>
+          <a href="https://sinamortgage.com/legal-disclaimer">
+            Legal Disclaimer
+          </a>
+          <a href="https://sinamortgage.com/site-accessibility">
+            Accessibility
+          </a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

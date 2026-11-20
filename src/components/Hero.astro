@@ -1,0 +1,97 @@
+---
+const slides = [
+  ["hero", "Multifamily"],
+  ["builder", "Construction"],
+  ["developer", "Development"],
+];
+---
+
+<section class="hero" aria-labelledby="headline">
+  <div class="hero-images" aria-hidden="true">
+    {slides.map(([file], i) => (
+      <img
+        src={"/images/" + file + ".webp"}
+        srcset={
+          i === 0
+            ? "/images/hero-mobile.webp 920w, /images/hero.webp 2140w"
+            : undefined
+        }
+        sizes={i === 0 ? "100vw" : undefined}
+        alt=""
+        class:list={[{ current: i === 0 }]}
+        loading={i === 0 ? "eager" : "lazy"}
+        fetchpriority={i === 0 ? "high" : "low"}
+      />
+    ))}
+  </div>
+  <div class="wrap hero-inner">
+    <div class="hero-content">
+      <p class="eyebrow">
+        <span></span> Commercial real estate finance
+      </p>
+      <h1 id="headline">
+        Capital structured
+        <br />
+        around <em>your project.</em>
+      </h1>
+      <p class="intro">
+        Real estate financing for investors, builders, and developers.
+        <br class="desktop" /> Clear guidance from first review through closing.
+      </p>
+      <div class="actions">
+        <a class="button sand" href="#project">
+          Submit a Project <b aria-hidden="true">↗</b>
+        </a>
+        <a class="explore" href="#solutions">
+          Explore capital solutions <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+    </div>
+    <div class="hero-bar">
+      <div class="location">
+        <svg
+          viewBox="0 0 24 24"
+          width="16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          aria-hidden="true"
+        >
+          <path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z" />
+          <circle cx="12" cy="10" r="2" />
+        </svg>{" "}
+        Naples, Florida <i></i>
+        <span>NMLS #1244555</span>
+      </div>
+      <div class="slides" aria-label="Architectural photographs">
+        <span class="slide-name" aria-live="polite">
+          Multifamily
+        </span>
+        {slides.map(([, label], i) => (
+          <button
+            type="button"
+            aria-label={"Show " + label + " photograph"}
+            aria-pressed={i === 0}
+            data-name={label}
+          >
+            {String(i + 1).padStart(2, "0")}
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  const photos = document.querySelectorAll(".hero-images img");
+  const buttons =
+    document.querySelectorAll<HTMLButtonElement>(".slides button");
+  buttons.forEach((btn, i) =>
+    btn.addEventListener("click", () => {
+      buttons.forEach((b, j) => {
+        b.setAttribute("aria-pressed", String(j === i));
+        photos[j].classList.toggle("current", i === j);
+      });
+      document.querySelector(".slide-name")!.textContent = btn.dataset.name!;
+    }),
+  );
+</script>

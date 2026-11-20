@@ -1,0 +1,50 @@
+---
+import Brand from "./Brand.astro";
+const links = [
+  ["Capital Solutions", "solutions"],
+  ["Who We Serve", "clients"],
+  ["Our Process", "process"],
+  ["About", "about"],
+];
+---
+
+<header id="top">
+  <div class="wrap navigation">
+    <Brand />
+    <button
+      class="menu"
+      type="button"
+      aria-controls="main-nav"
+      aria-expanded="false"
+    >
+      Menu <span aria-hidden="true">☰</span>
+    </button>
+    <nav id="main-nav" aria-label="Main navigation">
+      {links.map(([title, id]) => (
+        <a href={"#" + id}>{title}</a>
+      ))}
+      <a class="nav-cta" href="#project">
+        Submit a Project <span aria-hidden="true">↗</span>
+      </a>
+    </nav>
+  </div>
+</header>
+<script>
+  const menu = document.querySelector<HTMLButtonElement>(".menu")!;
+  function close() {
+    menu.setAttribute("aria-expanded", "false");
+  }
+  menu.addEventListener("click", () =>
+    menu.setAttribute(
+      "aria-expanded",
+      String(menu.getAttribute("aria-expanded") !== "true"),
+    ),
+  );
+  document.querySelector("nav")?.addEventListener("click", close);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && menu.getAttribute("aria-expanded") === "true") {
+      close();
+      menu.focus();
+    }
+  });
+</script>

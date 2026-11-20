@@ -1,0 +1,237 @@
+---
+interface Field {
+  label: string;
+  name: string;
+  options?: string[];
+  hint?: string;
+  autocomplete?: "name" | "email" | "tel";
+}
+const groups: { title: string; fields: Field[] }[] = [
+  {
+    title: "Your project",
+    fields: [
+      {
+        label: "I am a…",
+        name: "role",
+        options: ["Investor", "Builder", "Developer", "Other"],
+      },
+      {
+        label: "Project or asset type",
+        name: "asset",
+        options: [
+          "Multifamily",
+          "Rental portfolio",
+          "Mixed-use",
+          "Industrial",
+          "Retail",
+          "Office",
+          "Single-family investment",
+          "Other",
+        ],
+      },
+      { label: "Property location", name: "location", hint: "City and state" },
+      {
+        label: "Financing purpose",
+        name: "purpose",
+        options: [
+          "Acquisition",
+          "Refinance",
+          "Renovation",
+          "Construction inquiry",
+          "Bridge financing",
+          "Other",
+        ],
+      },
+    ],
+  },
+  {
+    title: "Financing details",
+    fields: [
+      {
+        label: "Requested amount or range",
+        name: "amount",
+        hint: "For example, $1M–$2M",
+      },
+      {
+        label: "Project stage",
+        name: "stage",
+        options: [
+          "Exploring options",
+          "Under contract",
+          "Property owned",
+          "Work in progress",
+          "Stabilized",
+        ],
+      },
+      {
+        label: "Target timeline",
+        name: "timeline",
+        options: [
+          "Within 30 days",
+          "1–3 months",
+          "3–6 months",
+          "More than 6 months",
+          "Flexible",
+        ],
+      },
+      { label: "Short project summary", name: "summary" },
+    ],
+  },
+  {
+    title: "Contact details",
+    fields: [
+      { label: "Full name", name: "name", autocomplete: "name" },
+      { label: "Email", name: "email", autocomplete: "email" },
+      { label: "Phone (optional)", name: "phone", autocomplete: "tel" },
+    ],
+  },
+];
+---
+
+<section class="soft" id="project">
+  <div class="wrap section split">
+    <div>
+      <p class="eyebrow">
+        <span></span> Project inquiry
+      </p>
+      <h2>
+        Tell us about
+        <br />
+        <em>your project.</em>
+      </h2>
+      <p class="measure">
+        Outline the property, the capital you need, and the milestone you’re
+        working toward.
+      </p>
+      <p class="privacy">
+        Demo mode. Your details stay in this tab. Please leave out sensitive
+        financial information.
+      </p>
+    </div>
+    <div class="form-panel">
+      <form id="brief">
+        <div class="progress" aria-hidden="true">
+          <i></i>
+          <i></i>
+          <i></i>
+        </div>
+        {groups.map((group, index) => (
+          <fieldset hidden={index !== 0} disabled={index !== 0}>
+            <legend tabindex="-1">
+              <small>STEP 0{index + 1} / 03</small>
+              {group.title}
+            </legend>
+            <div class="fields">
+              {group.fields.map((f) => (
+                <label>
+                  {f.label}
+                  {f.options ? (
+                    <select required name={f.name}>
+                      <option value="">Select an option</option>
+                      {f.options.map((o) => (
+                        <option>{o}</option>
+                      ))}
+                    </select>
+                  ) : f.name === "summary" ? (
+                    <textarea name={f.name} rows="3" required />
+                  ) : (
+                    <input
+                      type={
+                        f.name === "email"
+                          ? "email"
+                          : f.name === "phone"
+                            ? "tel"
+                            : "text"
+                      }
+                      required={f.name !== "phone"}
+                      name={f.name}
+                      autocomplete={f.autocomplete}
+                      placeholder={f.hint}
+                    />
+                  )}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        ))}
+        <div class="form-actions">
+          <button type="button" class="back" hidden>
+            Back
+          </button>
+          <button class="button navy next" type="submit">
+            Continue
+          </button>
+        </div>
+      </form>
+      <div id="result" hidden>
+        <p class="eyebrow">Project brief preview</p>
+        <h3 tabindex="-1">Your brief is ready.</h3>
+        <p>
+          This preview stays in your browser. No inquiry has been sent. Call
+          Dennis at <a href="tel:+12394657351">(239) 465-7351</a> to discuss
+          your project.
+        </p>
+        <dl></dl>
+        <button type="button" class="button navy edit">
+          Edit brief
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  const form = document.querySelector<HTMLFormElement>("#brief")!;
+  const result = document.querySelector<HTMLElement>("#result")!;
+  const panels = Array.from(form.querySelectorAll("fieldset"));
+  const back = form.querySelector<HTMLButtonElement>(".back")!;
+  const next = form.querySelector<HTMLButtonElement>(".next")!;
+  let current = 0;
+  function show(index: number, focus = true) {
+    current = index;
+    form.hidden = false;
+    result.hidden = true;
+    panels.forEach((panel, i) => {
+      panel.hidden = i !== index;
+      panel.disabled = i !== index;
+    });
+    form
+      .querySelectorAll(".progress i")
+      .forEach((el, i) => el.classList.toggle("on", i <= index));
+    back.hidden = index === 0;
+    next.textContent =
+      index === panels.length - 1 ? "Preview project brief" : "Continue";
+    if (focus) panels[index].querySelector("legend")?.focus();
+  }
+  show(0, false);
+  back.addEventListener("click", () => show(current - 1));
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (current < panels.length - 1) {
+      show(current + 1);
+      return;
+    }
+    const list = result.querySelector("dl")!;
+    list.replaceChildren();
+    for (const field of form.querySelectorAll<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >("input, select, textarea")) {
+      const term = document.createElement("dt");
+      term.textContent =
+        field.labels?.[0]?.firstChild?.textContent ?? field.name;
+      const value = document.createElement("dd");
+      value.textContent = field.value || "Not provided";
+      list.append(term, value);
+    }
+    form.hidden = true;
+    result.hidden = false;
+    result.querySelector("h3")?.focus();
+  });
+  result.querySelector("button")?.addEventListener("click", () => show(0));
+  document.querySelectorAll<HTMLAnchorElement>("[data-role]").forEach((link) =>
+    link.addEventListener("click", () => {
+      show(0, false);
+      form.querySelector<HTMLSelectElement>('[name="role"]')!.value =
+        link.dataset.role!;
+    }),
+  );
+</script>
